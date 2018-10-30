@@ -3,17 +3,16 @@
 {% block content %}
 
     <h1>Add New Blog</h1>
-    <form method='POST' >
+    <form method='POST' style='display: inline-block'>
         <label>Blog Title
-            <input type="text" name="blog_title" />
+            <input type='text' name='blog_title' />
         </label>
         <label>Blog Body
-            <textarea name="blog_body" rows="10" cols="50"></textarea>
+            <textarea name='blog_body' rows='10' cols='50'></textarea>
         </label>
-        <input type="submit" value="Submit Blog!" />
+        <input type='submit' value='Submit Blog!' />
     </form>
 
-
-
+    <hr />
 
 {% endblock %}
