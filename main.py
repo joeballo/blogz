@@ -31,13 +31,35 @@ def new_post():
     if request.method == 'POST':
         blog_title = request.form['blog_title']
         blog_body = request.form['blog_body']
-        new_blog = Blog(blog_title, blog_body)
-        db.session.add(new_blog)
-        db.session.commit()
 
-    blogs = Blog.query.all()
+        blog_title_error = ""
+        blog_body_error = ""
 
-    return render_template('add-new-blog.html', blogs=blogs)
+        if blog_title == "":
+            blog_title_error = "Please fill in the title"
+
+        if blog_body == "":
+            blog_body_error = "Please fill in the body"
+
+        if not blog_title_error and not blog_body_error:
+
+
+            new_blog = Blog(blog_title, blog_body)
+            db.session.add(new_blog)
+            db.session.commit()
+
+            blogs = Blog.query.all()
+
+            return redirect('/blog')
+        
+        else:
+            return render_template("add-new-blog.html", 
+            blog_title_error=blog_title_error, 
+            blog_body_error=blog_body_error)
+
+    return render_template('add-new-blog.html')
+
+
 
 
 
