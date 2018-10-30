@@ -22,7 +22,7 @@ class Blog(db.Model):
 def blog_listing():
 
     blogs = Blog.query.all()
-    return render_template("main-blog-listings.html", blogs=blogs)
+    return render_template("main-blog-listings.html", blogs=blogs, title="Build A Blog!")
 
 
 @app.route('/newpost', methods=['POST', 'GET']) #create a blog
@@ -55,9 +55,10 @@ def new_post():
         else:
             return render_template("add-new-blog.html", 
             blog_title_error=blog_title_error, 
-            blog_body_error=blog_body_error)
+            blog_body_error=blog_body_error,
+            title="New Entry")
 
-    return render_template('add-new-blog.html')
+    return render_template('add-new-blog.html', title="New Entry")
 
 
 

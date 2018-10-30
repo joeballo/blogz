@@ -3,15 +3,29 @@
 {% block content %}
 
     <h1>Add New Blog</h1>
-    <form method='POST' style='display: inline-block'>
-        <label for='blog_title'>Blog Title
-            <input type='text' name='blog_title' value='{{ blog_title }}' />
-            <span class='error'>{{ blog_title_error }}</span>
-        </label>
-        <label for='blog_body'>Blog Body
-            <textarea name='blog_body' rows='10' cols='50' value='{{ blog_body }}'></textarea>
-            <span class='error'>{{ blog_body_error }}</span>
-        </label>
+    <form method='POST'>
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <label for='blog_title'>Blog Title</label>
+                    </td>
+                    <td>
+                        <input type='text' name='blog_title' value='{{ blog_title }}' />
+                        <span class='error'>{{ blog_title_error }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for='blog_body'>Blog Body</label>
+                    </td>
+                    <td>
+                        <textarea name='blog_body' rows='10' cols='50' value='{{ blog_body }}'></textarea>
+                        <span class='error'>{{ blog_body_error }}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
         <input type='submit' value='Submit Blog!' />
     </form>
 
