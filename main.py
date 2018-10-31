@@ -18,11 +18,17 @@ class Blog(db.Model):
         self.blog_title = blog_title
         self.blog_body = blog_body
 
-@app.route('/blog') # view blogs
+@app.route('/blog') 
 def blog_listing():
-
-    blogs = Blog.query.all()
-    return render_template("main-blog-listings.html", blogs=blogs, title="Build A Blog!")
+    num = request.args.get('id')
+    if not num:
+        blogs = Blog.query.all() #view all blogs
+        return render_template("main-blog-listings.html", blogs=blogs, title="Build A Blog!")
+    else:
+            #view single blog
+        blog = Blog.query.filter_by(id=num).first()
+        return render_template('single_blog_view.html', 
+        blog=blog)
 
 
 @app.route('/newpost', methods=['POST', 'GET']) #create a blog
@@ -48,9 +54,10 @@ def new_post():
             db.session.add(new_blog)
             db.session.commit()
 
-            blogs = Blog.query.all()
+            #blogs = Blog.query.filter_by(id).first()
+            new_id = new_blog.id
 
-            return redirect('/blog')
+            return redirect('/blog?id={0}'.format(new_id))
         
         else:
             return render_template("add-new-blog.html", 
