@@ -34,8 +34,8 @@ class User(db.Model):
 
 # @app.before_request
 # def require_login():
-#     allowed_routes = ['/login', '/register']
-#     if request.endpoint not in allowed_routes and 'email' not in session:
+#     allowed_routes = ['/login', '/signup']
+#     if request.endpoint not in allowed_routes and 'username' not in session:
 #         return redirect('/login')
 
 @app.route('/blog') 
@@ -64,7 +64,7 @@ def signup():
             return redirect('/signup')
 
         if len(password) <= 3:
-            flash('Invalide password, must be at least 3 characters')
+            flash('Invalid password, must be at least 3 characters')
             return redirect('/signup')
 
         if password != verify:
@@ -116,7 +116,10 @@ def new_post():
     if request.method == 'POST':
         blog_title = request.form['blog_title']
         blog_body = request.form['blog_body']
-        blog_owner = request.form['owner']
+        #blog_owner = int(request.form['owner_id'])
+        #owner_id = Blog.query.get(blog_owner)
+        this_id = User.query.filter_by(username=session['username']).first()
+
 
         blog_title_error = ""
         blog_body_error = ""
@@ -130,7 +133,7 @@ def new_post():
         if not blog_title_error and not blog_body_error:
 
 
-            new_blog = Blog(blog_title, blog_body, blog_owner)
+            new_blog = Blog(blog_title, blog_body, this_id)
             db.session.add(new_blog)
             db.session.commit()
 
