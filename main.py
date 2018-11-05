@@ -38,17 +38,27 @@ def require_login():
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
+@app.route('/')
+def index():
+
+    users = User.query.all()
+    return render_template('index.html', users=users)
+
 @app.route('/blog', methods=['POST', 'GET']) 
 def blog_listing():
-    num = request.args.get('id')
+    num = request.args.get('user')
     if not num:
         blogs = Blog.query.all() #view all blogs
         return render_template("main-blog-listings.html", blogs=blogs, title="Build A Blog!")
-    else:
+    if num is not 'user':
+        #new_id = request.args.get('id')
             #view single blog
-        blog = Blog.query.filter_by(id=num).first()
+        blog = Blog.query.filter_by(id=num).all()
         return render_template('single_blog_view.html', 
         blog=blog)
+    else:
+        blogs = Blog.query.filter_by(owner_id=num).all()
+        return render_template('view_users_blogs.html', blogs=blogs)
 
 
 @app.route('/signup', methods=['POST', 'GET'])
