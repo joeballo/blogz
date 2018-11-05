@@ -32,13 +32,13 @@ class User(db.Model):
         self.username = username
         self.password = password
 
-# @app.before_request
-# def require_login():
-#     allowed_routes = ['/login', '/signup']
-#     if request.endpoint not in allowed_routes and 'username' not in session:
-#         return redirect('/login')
+@app.before_request
+def require_login():
+    allowed_routes = ['login', 'main-blog-listings', 'index', 'signup']
+    if request.endpoint not in allowed_routes and 'username' not in session:
+        return redirect('/login')
 
-@app.route('/blog') 
+@app.route('/blog', methods=['POST', 'GET']) 
 def blog_listing():
     num = request.args.get('id')
     if not num:
@@ -49,7 +49,6 @@ def blog_listing():
         blog = Blog.query.filter_by(id=num).first()
         return render_template('single_blog_view.html', 
         blog=blog)
-
 
 
 @app.route('/signup', methods=['POST', 'GET'])
@@ -86,6 +85,8 @@ def signup():
 
     return render_template('signup.html')
 
+
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     
@@ -110,16 +111,16 @@ def login():
 
     return render_template('login.html')
 
+
+
 @app.route('/newpost', methods=['POST', 'GET']) #create a blog
 def new_post():
 
     if request.method == 'POST':
         blog_title = request.form['blog_title']
         blog_body = request.form['blog_body']
-        #blog_owner = int(request.form['owner_id'])
-        #owner_id = Blog.query.get(blog_owner)
-        this_id = User.query.filter_by(username=session['username']).first()
 
+        this_id = User.query.filter_by(username=session['username']).first()
 
         blog_title_error = ""
         blog_body_error = ""
@@ -148,6 +149,11 @@ def new_post():
             title="New Entry")
 
     return render_template('add-new-blog.html', title="New Entry")
+
+@app.route('/logout')
+def logout():
+    del session['username']
+    return redirect('/blog')
 
 
 
