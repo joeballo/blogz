@@ -1,18 +1,24 @@
 body {
-    font-family: helvetica;
-    width: 800px;
+    font-family: Georgia, sans-serif;
+    width: 900px;
     margin: 0 auto;
     padding: 10px;
-    background-color: yellow;
+ 
 }
-
-
-
-
 
 .error { 
     color: red;
  }
 nav { 
     padding: 25px; 
+    background-color: gray;
+    text-align: center;
+}
+
+nav a {
+    padding: 15px;
+}
+
+.logout, .login {
+    text-align: right;
 }

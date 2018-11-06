@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -15,11 +16,15 @@ class Blog(db.Model):
     blog_title = db.Column(db.String(120))
     blog_body = db.Column(db.String(300))
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    pub_date = db.Column(db.DateTime)
 
-    def __init__(self, blog_title, blog_body, owner):
+    def __init__(self, blog_title, blog_body, owner, pub_date=None):
         self.blog_title = blog_title
         self.blog_body = blog_body
         self.owner = owner
+        if pub_date is None:
+            pub_date = datetime.utcnow()
+        self.pub_date = pub_date
 
 class User(db.Model):
 
@@ -34,7 +39,8 @@ class User(db.Model):
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'main-blog-listings', 'index', 'signup']
+    allowed_routes = ['login', 'main-blog-listings', 'index', 
+    'signup', 'static']
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
@@ -50,7 +56,7 @@ def blog_listing():
     new_user = request.args.get('user')
 
     if not new_id and not new_user:
-        blogs = Blog.query.all() #view all blogs by all users
+        blogs = Blog.query.order_by(Blog.pub_date).all() #view all blogs by all users
         return render_template("main-blog-listings.html", 
         blogs=blogs, title="Build A Blog!")
     
