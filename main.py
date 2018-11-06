@@ -46,19 +46,26 @@ def index():
 
 @app.route('/blog', methods=['POST', 'GET']) 
 def blog_listing():
-    num = request.args.get('user')
-    if not num:
-        blogs = Blog.query.all() #view all blogs
-        return render_template("main-blog-listings.html", blogs=blogs, title="Build A Blog!")
-    if num is not 'user':
-        #new_id = request.args.get('id')
-            #view single blog
-        blog = Blog.query.filter_by(id=num).all()
+    new_id = request.args.get('id')
+    new_user = request.args.get('user')
+
+    if not new_id and not new_user:
+        blogs = Blog.query.all() #view all blogs by all users
+        return render_template("main-blog-listings.html", 
+        blogs=blogs, title="Build A Blog!")
+    
+    if not new_user:  #view one blog by one user
+        blog = Blog.query.filter_by(id=new_id).first()
+        my_user = User.query.filter_by(id=blog.owner_id).first()
         return render_template('single_blog_view.html', 
-        blog=blog)
-    else:
-        blogs = Blog.query.filter_by(owner_id=num).all()
-        return render_template('view_users_blogs.html', blogs=blogs)
+        blog=blog, user=my_user)
+    
+    else:   #view all blogs by one user
+        
+        u_id = User.query.filter_by(username=new_user).first()
+        blogs = Blog.query.filter_by(owner_id=u_id.id).all()
+        return render_template('view_users_blogs.html', 
+        blogs=blogs, user=u_id)
 
 
 @app.route('/signup', methods=['POST', 'GET'])

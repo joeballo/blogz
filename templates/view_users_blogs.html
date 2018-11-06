@@ -2,14 +2,19 @@
 
 {% block content %}
 
+<h1>Blog Posts</h1>
+
+<hr/>
+
     {% if blogs|length == 0 %}
     <p>No blogs yet!</p>
 
     {% else %}
 
         {% for blog in blogs %}
-            <h2>{{ blog.blog_title }}</h2>
+            <h2><a href='/blog?id={{blog.id}}'>{{ blog.blog_title }}</a></h2>
             <p>{{ blog.blog_body }}</p>
+            <p>written by <a href='/blog?user={{user.username}}'>{{ user.username }}</a></p>
         {% endfor %}
 
     {% endif %}
